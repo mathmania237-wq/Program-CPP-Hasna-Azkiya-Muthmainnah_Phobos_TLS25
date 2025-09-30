@@ -1,0 +1,85 @@
+#include <iostream>
+using namespace std;
+
+int length(const char s[]){
+    int i=0; while(s[i]!='\0') i++;
+    return i;
+}
+
+bool isVowel(char c){
+    char l=c;
+    if(c>='A' && c<='Z') l=c+32; 
+    return (l=='a'||l=='e'||l=='i'||l=='o'||l=='u');
+}
+
+bool isDigit(char c){ return c>='0' && c<='9'; }
+
+void myReverse(char arr[], int n){
+    int i=0,j=n-1;
+    while(i<j){
+        char t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+        i++; j--;
+    }
+}
+
+int toInt(const char s[], int a, int b){
+    int val=0;
+    for(int i=a;i<=b;i++) val=val*10+(s[i]-'0');
+    return val;
+}
+
+int main(){
+    int mode;
+    cout<<"Pilih mode (1=encode, 2=decode): ";
+    cin>>mode;
+
+    if(mode==1){
+        char word[101];
+        cout<<"Masukkan kata: ";
+        cin>>word;
+        int n=length(word);
+
+        char cons[101]; int cl=0;
+        for(int i=0;i<n;i++) if(!isVowel(word[i])) cons[cl++]=word[i];
+        cons[cl]='\0';
+
+        myReverse(cons,cl);
+
+        int code=(int)word[0];
+
+        int pos=(cl+1)/2;
+        cout<<"Sandi: ";
+        for(int i=0;i<pos;i++) cout<<cons[i];
+        cout<<code;
+        for(int i=pos;i<cl;i++) cout<<cons[i];
+        cout<<"\n";
+    }
+    else if(mode==2){
+        char pwd[201];
+        cout<<"Masukkan sandi: ";
+        cin>>pwd;
+        int n=length(pwd);
+
+        int f=-1,l=-1;
+        for(int i=0;i<n;i++){
+            if(isDigit(pwd[i])){
+                if(f==-1) f=i;
+                l=i;
+            }
+        }
+
+        int code=toInt(pwd,f,l);
+        char firstChar=(char)code;
+
+
+        char rem[201]; int rl=0;
+        for(int i=0;i<n;i++) if(i<f||i>l) rem[rl++]=pwd[i];
+        rem[rl]='\0';
+
+        myReverse(rem,rl);
+        rem[rl]='\0';
+
+        cout<<"Huruf pertama: "<<firstChar<<"\n";
+        cout<<"Rangka konsonan: "<<rem<<"\n";
+    }
+}
